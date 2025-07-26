@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: employee_management_app
+    volumes:
+      - ./app:/var/www/html
+      - ./app/config/jwt:/var/www/html/config/jwt
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      # - notification-service
+    environment:
+      - DATABASE_URL=mysql://root:rootpassword@db:3306/employee_management_db?serverVersion=8.0.32&charset=utf8mb4
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8000
+      - APP_ENV=dev
+    networks:
+      - employee-network
+    command: php -S 0.0.0.0:8000 -t public
+  db:
+    image: mysql:8.0
+    container_name: employee_management_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: employee_management_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - employee-network
+
+  # notification-service:
+  #   build:
+  #     context: ./notification-service
+  #     dockerfile: Dockerfile
+  #   container_name: employee_notification_service
+  #   ports:
+  #     - "8001:8000"
+  #   environment:
+  #     - FLASK_ENV=development
+  #     - SMTP_HOST=smtp.gmail.com
+  #     - SMTP_PORT=587
+  #     - SMTP_USER=your-email@gmail.com
+  #     - SMTP_PASSWORD=your-app-password
+  #   networks:
+  #     - employee-network
+
+volumes:
+  mysql_data:
+
+networks:
+  employee-network:
+    driver: bridge

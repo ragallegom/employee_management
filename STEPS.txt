@@ -1,0 +1,14 @@
+✅ ¿Qué sigue?
+Te propongo el siguiente flujo guiado:
+
+🔐 Endpoint /api/register (registro de usuario) con hashing.
+
+🔓 Endpoint /api/login que devuelve JWT.
+
+👥 CRUD para entidad Employee.
+
+🔄 Servicio que consume API de posiciones.
+
+📩 Integración con el microservicio en Python.
+
+🧪 Tests y Postman.
