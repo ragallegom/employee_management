@@ -13,7 +13,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
-      # - notification-service
+      - notification-service
     environment:
       - DATABASE_URL=mysql://root:rootpassword@db:3306/employee_management_db?serverVersion=8.0.32&charset=utf8mb4
       - NOTIFICATION_SERVICE_URL=http://notification-service:8000
@@ -38,21 +38,21 @@ services:
     networks:
       - employee-network
 
-  # notification-service:
-  #   build:
-  #     context: ./notification-service
-  #     dockerfile: Dockerfile
-  #   container_name: employee_notification_service
-  #   ports:
-  #     - "8001:8000"
-  #   environment:
-  #     - FLASK_ENV=development
-  #     - SMTP_HOST=smtp.gmail.com
-  #     - SMTP_PORT=587
-  #     - SMTP_USER=your-email@gmail.com
-  #     - SMTP_PASSWORD=your-app-password
-  #   networks:
-  #     - employee-network
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: employee_notification_service
+    ports:
+      - "8001:8000"
+    environment:
+      - FLASK_ENV=development
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your-email@gmail.com
+      - SMTP_PASSWORD=your-app-password
+    networks:
+      - employee-network
 
 volumes:
   mysql_data:
