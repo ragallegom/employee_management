@@ -14,6 +14,8 @@
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
+        <server name="DATABASE_URL" value="mysql://root:rootpassword@db:3306/employee_test_db?serverVersion=8.0.32&amp;charset=utf8mb4" />
+
         <server name="SHELL_VERBOSITY" value="-1" />
     </php>
 
