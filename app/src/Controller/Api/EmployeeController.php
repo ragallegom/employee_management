@@ -9,6 +9,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\EmployeeRepository;
+use App\Service\PositionService;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Dto\EmployeeInput;
+use App\Dto\EmployeeOutput;
 
 #[Route('/api/employees', name: 'api_employees_')]
 final class EmployeeController extends AbstractController
@@ -17,33 +22,46 @@ final class EmployeeController extends AbstractController
     public function list(EmployeeRepository $employeeRepository): JsonResponse
     {
         $employees = $employeeRepository->findAll();
-        $data = [];
+        
+        $output = array_map(
+            fn(Employee $employee) => EmployeeOutput::fromEntity($employee),
+            $employees
+        );
 
-        foreach ($employees as $employee) {
-            $data[] = [
-                'id' => $employee->getId(),
-                'name' => $employee->getName(),
-                'email' => $employee->getEmail(),
-                'position' => $employee->getPosition(),
-            ];
-        }
-
-        return new JsonResponse($data);
+        return new JsonResponse($output);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    public function create(
+        Request $request, 
+        SerializerInterface $serializer,
+        ValidatorInterface  $validator,
+        EntityManagerInterface $entityManager,
+        PositionService $positionService
+    ): JsonResponse {
+        $input = $serializer->deserialize(
+            $request->getContent(),
+            EmployeeInput::class,
+            'json'
+        );
 
-        if (empty($data['name']) || empty($data['email']) || empty($data['position'])) {
-            return new JsonResponse(['error' => 'Invalid input'], 400);
+        $errors = $validator->validate($input);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return new JsonResponse(['errors' => $errorMessages], 400);
+        }
+
+        if (!$positionService->isValidPosition($input->position)) {
+            return new JsonResponse(['error' => 'Invalid position'], 400);
         }
 
         $employee = new Employee();
-        $employee->setName($data['name']);
-        $employee->setEmail($data['email']);
-        $employee->setPosition($data['position']);
+        $employee->setName($input->name);
+        $employee->setEmail($input->email);
+        $employee->setPosition($input->position);
 
         $employee->setCreatedAt(new \DateTimeImmutable());
         $employee->setUpdatedAt(new \DateTimeImmutable());
@@ -51,6 +69,6 @@ final class EmployeeController extends AbstractController
         $entityManager->persist($employee);
         $entityManager->flush();
 
-        return new JsonResponse(['id' => $employee->getId()], 201);
+        return new JsonResponse(EmployeeOutput::fromEntity($employee), 201);
     }
 }
