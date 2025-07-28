@@ -58,10 +58,16 @@ final class EmployeeController extends AbstractController
             return new JsonResponse(['error' => 'Invalid position'], 400);
         }
 
+        $birthDate = \DateTimeImmutable::createFromFormat('Y-m-d', $input->birthDate);
+        if (!$birthDate) {
+            return new JsonResponse(['error' => 'Invalid birth date format'], 400);
+        }
+
         $employee = new Employee();
         $employee->setName($input->name);
         $employee->setEmail($input->email);
         $employee->setPosition($input->position);
+        $employee->setBirthDate($birthDate);
 
         $employee->setCreatedAt(new \DateTimeImmutable());
         $employee->setUpdatedAt(new \DateTimeImmutable());

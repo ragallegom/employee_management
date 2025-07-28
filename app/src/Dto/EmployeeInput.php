@@ -18,6 +18,10 @@ class EmployeeInput
     #[Assert\Length(min: 2, max: 50)]
     public string $position;
 
+    #[Assert\NotBlank]
+    #[Assert\Date]
+    public string $birthDate;
+
     public function __construct(string $name, string $email, string $position)
     {
         $this->name = $name;

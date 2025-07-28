@@ -28,6 +28,9 @@ class Employee
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $birthDate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Employee
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeImmutable
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeImmutable $birthDate): static
+    {
+        $this->birthDate = $birthDate;
 
         return $this;
     }
