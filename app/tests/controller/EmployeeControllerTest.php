@@ -196,4 +196,238 @@ class EmployeeControllerTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('Invalid position', $data['error']);
     }
-}   
+
+    public function testShowEmployee(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $id = $data['id'];
+
+        $this->client->request('GET', "/api/employees/$id", [], [],
+            [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $this->assertResponseIsSuccessful();
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('product manager', $data['position']);
+    }
+
+    public function testUpdateEmployee(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('product manager', $data['position']);
+
+        $id = $data['id'];
+        
+        $this->client->request('PUT', "/api/employees/$id", [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Update',
+                'email' => 'john@correo.com',
+                'position' => 'help desk',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        
+
+        $this->assertResponseIsSuccessful();
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('John Update', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('help desk', $data['position']);
+    }
+
+    public function testUpdateEmployeenNotAllowed(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('product manager', $data['position']);
+
+        $id = $data['id'];
+
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+        
+        $this->client->request('PUT', "/api/employees/$id", [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Update',
+                'email' => 'john@correo.com',
+                'position' => 'help desk',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(403);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('You do not have permission to update this employee', $data['error']);
+    }
+
+    public function testDeleteEmployee(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('product manager', $data['position']);
+
+        $id = $data['id'];
+
+        $this->client->request('DELETE', "/api/employees/$id", [], [],
+            [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $this->assertResponseStatusCodeSame(204);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertNull($data);
+        
+        $this->client->request('GET', "/api/employees/$id", [], [],
+            [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $this->assertResponseStatusCodeSame(404);
+    }
+
+    public function testDeleteEmployeeNotAllowed(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('john@correo.com', $data['email']);
+        $this->assertEquals('product manager', $data['position']);
+
+        $id = $data['id'];
+
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('DELETE', "/api/employees/$id", [], [],
+            [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $this->assertResponseStatusCodeSame(403);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('You do not have permission to delete this employee', $data['error']);
+    }
+}
+
+
