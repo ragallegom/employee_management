@@ -16,7 +16,7 @@ services:
       - notification-service
     environment:
       - DATABASE_URL=mysql://root:rootpassword@db:3306/employee_management_db?serverVersion=8.0.32&charset=utf8mb4
-      - NOTIFICATION_SERVICE_URL=http://notification-service:8000
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8000/notify
       - APP_ENV=dev
     networks:
       - employee-network

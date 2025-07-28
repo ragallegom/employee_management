@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Dto\EmployeeInput;
 use App\Dto\EmployeeOutput;
+use App\Service\NotificationService;
 
 #[Route('/api/employees', name: 'api_employees_')]
 final class EmployeeController extends AbstractController
@@ -37,7 +38,8 @@ final class EmployeeController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface  $validator,
         EntityManagerInterface $entityManager,
-        PositionService $positionService
+        PositionService $positionService,
+        NotificationService $notificationService
     ): JsonResponse {
         $input = $serializer->deserialize(
             $request->getContent(),
@@ -78,6 +80,16 @@ final class EmployeeController extends AbstractController
 
         $entityManager->persist($employee);
         $entityManager->flush();
+
+        $notificationService->notify([
+            'employee' => [
+                'id' => $employee->getId(),
+                'name' => $employee->getName(),
+                'email' => $employee->getEmail(),
+                'position' => $employee->getPosition(),
+                'birthDate' => $employee->getBirthDate()->format('Y-m-d'),
+            ]
+        ]);
 
         return new JsonResponse(EmployeeOutput::fromEntity($employee), 201);
     }
