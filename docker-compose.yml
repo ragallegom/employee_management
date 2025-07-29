@@ -52,6 +52,18 @@ services:
       - SMTP_PASSWORD=db8d0579248eb2
     networks:
       - employee-network
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:4173"
+    networks:
+      - employee-network
+    depends_on:
+      - php
+
 
 volumes:
   mysql_data:
