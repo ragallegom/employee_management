@@ -54,11 +54,17 @@ services:
       - employee-network
   
   frontend:
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:4173"
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     networks:
       - employee-network
     depends_on:
