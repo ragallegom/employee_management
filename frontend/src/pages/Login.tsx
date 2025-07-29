@@ -1,3 +1,5 @@
-export default function Login() {
-  return <h2>Login Page</h2>;
+const Login = () => {
+  return <h2>Página de Login</h2>
 }
+
+export default Login
