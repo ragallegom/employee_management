@@ -7,7 +7,7 @@ JWT_PASSPHRASE?=jwtsecret
 DB_CONTAINER=db
 PHP_CONTAINER=$(PROJECT_NAME)
 
-.PHONY: jwt-keys jwt-check jwt-clean docker-up docker-down docker-restart db-reset db-migrate db-fixtures
+.PHONY: jwt-keys jwt-check jwt-clean docker-up docker-down docker-restart db-reset db-migrate db-fixtures test test-file test-method test-clear reset-db-test
 
 jwt-keys:
 	@mkdir -p $(JWT_DIR)
@@ -45,3 +45,20 @@ db-migrate:
 
 db-fixtures:
 	docker exec -it $(PHP_CONTAINER) php bin/console doctrine:fixtures:load --no-interaction
+
+test:
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/phpunit
+
+test-file:
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/phpunit $(FILE)
+
+test-method:
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/phpunit --filter $(METHOD)
+
+test-clear:
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/console cache:clear --env=test
+
+reset-db-test:
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/console doctrine:database:drop --force
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/console doctrine:database:create
+	docker exec -e APP_ENV=test -it $(PHP_CONTAINER) php bin/console doctrine:migrations:migrate --no-interaction
