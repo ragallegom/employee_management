@@ -83,13 +83,8 @@ final class EmployeeController extends AbstractController
         $entityManager->flush();
 
         $notificationService->notify([
-            'employee' => [
-                'id' => $employee->getId(),
-                'name' => $employee->getName(),
-                'email' => $employee->getEmail(),
-                'position' => $employee->getPosition(),
-                'birthDate' => $employee->getBirthDate()->format('Y-m-d'),
-            ]
+            'name' => $employee->getName(),
+            'email' => $employee->getEmail()
         ]);
 
         return new JsonResponse(EmployeeOutput::fromEntity($employee), 201);
