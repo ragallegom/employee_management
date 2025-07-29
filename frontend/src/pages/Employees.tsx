@@ -24,7 +24,12 @@ const Employees = () => {
       return
     }
 
-    const fetchEmployees = async () => {
+    fetchEmployees()
+  }, [navigate])
+
+  const fetchEmployees = async () => {
+      const token = localStorage.getItem("token");
+
       try {
         const response = await fetch('http://localhost:8000/api/employees', {
           headers: {
@@ -44,8 +49,26 @@ const Employees = () => {
       }
     }
 
-    fetchEmployees()
-  }, [navigate])
+    const handleDelete = async (id: number) => {
+      if (!confirm("¿Estás seguro de que deseas eliminar este empleado?")) return;
+
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`http://localhost:8000/api/employees/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          fetchEmployees(); 
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   return (
     <div>
@@ -55,12 +78,15 @@ const Employees = () => {
       <ul>
         {employees.map((emp) => (
           <li key={emp.id}>
-            <strong>{emp.name} {emp.lastName}</strong> — {emp.position} — {emp.email} <Link to={`/employees/edit/${emp.id}`}>Edit</Link>
+            <strong>{emp.name} {emp.lastName}</strong> — {emp.position} — {emp.email} 
+            <Link to={`/employees/edit/${emp.id}`}>Edit</Link>
+            <button onClick={() => handleDelete(emp.id)}>Eliminar</button>
           </li>
         ))}
       </ul>
     </div>
   )
 }
+
 
 export default Employees
