@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard'
 import Employees from '../pages/Employees'
 import Navbar from '../components/Navbar'
 import CreateEmployee from '../pages/CreateEmployee'
+import EditEmployee from '../pages/EditEmployee'
 
 const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ const AppRouter = () => {
         <Route path="/employees" element={<Employees />} />
         <Route path="/register" element={<Register />} />
         <Route path='/employees/create' element={<CreateEmployee />} />
+        <Route path="/employees/edit/:id" element={<EditEmployee />} />
       </Routes>
     </BrowserRouter>
   )

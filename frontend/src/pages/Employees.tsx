@@ -1,5 +1,6 @@
 // src/pages/EmployeeList.tsx
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 type Employee = {
@@ -54,7 +55,7 @@ const Employees = () => {
       <ul>
         {employees.map((emp) => (
           <li key={emp.id}>
-            <strong>{emp.name} {emp.lastName}</strong> — {emp.position} — {emp.email}
+            <strong>{emp.name} {emp.lastName}</strong> — {emp.position} — {emp.email} <Link to={`/employees/edit/${emp.id}`}>Edit</Link>
           </li>
         ))}
       </ul>
