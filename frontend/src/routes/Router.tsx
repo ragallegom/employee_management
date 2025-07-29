@@ -4,6 +4,7 @@ import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import Employees from '../pages/Employees'
 import Navbar from '../components/Navbar'
+import CreateEmployee from '../pages/CreateEmployee'
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/register" element={<Register />} />
+        <Route path='/employees/create' element={<CreateEmployee />} />
       </Routes>
     </BrowserRouter>
   )
