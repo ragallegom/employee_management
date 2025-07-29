@@ -11,6 +11,10 @@ class EmployeeInput
     public string $name;
 
     #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 50)]
+    public string $lastName;
+
+    #[Assert\NotBlank]
     #[Assert\Email]
     public string $email;
 
@@ -22,10 +26,17 @@ class EmployeeInput
     #[Assert\Date]
     public string $birthDate;
 
-    public function __construct(string $name, string $email, string $position)
-    {
+    public function __construct(
+        string $name,
+        string $lastName,
+        string $email,
+        string $position,
+        string $birthDate
+    ) {
         $this->name = $name;
+        $this->lastName = $lastName;
         $this->email = $email;
         $this->position = $position;
+        $this->birthDate = $birthDate;
     }
 }

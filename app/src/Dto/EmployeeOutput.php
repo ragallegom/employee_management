@@ -8,6 +8,7 @@ class EmployeeOutput
 {
     public int $id;
     public string $name;
+    public string $lastName;
     public string $email;
     public string $position;
     public \DateTimeImmutable $createdAt;
@@ -15,7 +16,8 @@ class EmployeeOutput
 
     public function __construct(
         int $id, 
-        string $name, 
+        string $name,
+        string $lastName, 
         string $email, 
         string $position, 
         \DateTimeImmutable $createdAt,
@@ -23,6 +25,7 @@ class EmployeeOutput
     ){
         $this->id = $id;
         $this->name = $name;
+        $this->lastName = $lastName;
         $this->email = $email;
         $this->position = $position;
         $this->createdAt = $createdAt;
@@ -34,6 +37,7 @@ class EmployeeOutput
         return new self(
             $employee->getId(),
             $employee->getName(),
+            $employee->getLastName(),
             $employee->getEmail(),
             $employee->getPosition(),
             $employee->getCreatedAt(),

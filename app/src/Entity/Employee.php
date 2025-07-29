@@ -13,8 +13,11 @@ class Employee
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -48,6 +51,18 @@ class Employee
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = $lastName;
 
         return $this;
     }

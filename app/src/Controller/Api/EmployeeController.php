@@ -67,6 +67,7 @@ final class EmployeeController extends AbstractController
 
         $employee = new Employee();
         $employee->setName($input->name);
+        $employee->setLastName($input->lastName);
         $employee->setEmail($input->email);
         $employee->setPosition($input->position);
         $employee->setBirthDate($birthDate);
@@ -179,6 +180,7 @@ final class EmployeeController extends AbstractController
         }
 
         $employee->setName($input->name);
+        $employee->setLastName($input->lastName);
         $employee->setEmail($input->email);
         $employee->setPosition($input->position);
         $employee->setBirthDate($birthDate);

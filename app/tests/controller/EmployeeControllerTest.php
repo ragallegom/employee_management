@@ -48,7 +48,8 @@ class EmployeeControllerTest extends WebTestCase
         $this->client->request('POST', '/api/employees', [], [], [
             'CONTENT_TYPE' => 'application/json',
         ], json_encode([
-            'name' => 'John Doe',
+            'name' => 'John',
+            'lastName' => 'Doe',
             'email' => 'ana@correo.com',
             'position' => 'developer',
             'birthdate' => '1990-01-01',
@@ -76,7 +77,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'ana@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -85,7 +87,8 @@ class EmployeeControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(201);
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('ana@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
     }
@@ -104,6 +107,7 @@ class EmployeeControllerTest extends WebTestCase
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
                 'name' => '',
+                'lastName' => 'Test',
                 'email' => 'ana@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -131,7 +135,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Dow',
+                'name' => 'John',
+                'lastName' => 'Dow',
                 'email' => '',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -158,7 +163,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Dow',
+                'name' => 'John',
+                'lastName' => 'Dow',
                 'email' => 'invalid',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -185,7 +191,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Dow',
+                'name' => 'John',
+                'lastName' => 'Dow',
                 'email' => 'ana@correo.com',
                 'position' => 'design',
                 'birthDate' => '1990-01-01',
@@ -210,7 +217,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -229,7 +237,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
     }
@@ -247,7 +256,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -257,7 +267,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
 
@@ -268,7 +279,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Update',
+                'name' => 'Ana',
+                'lastName' => 'Update',
                 'email' => 'john@correo.com',
                 'position' => 'help desk',
                 'birthDate' => '1990-01-01',
@@ -278,7 +290,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals('John Update', $data['name']);
+        $this->assertEquals('Ana', $data['name']);
+        $this->assertEquals('Update', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('help desk', $data['position']);
     }
@@ -296,7 +309,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -306,7 +320,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
 
@@ -348,7 +363,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -358,7 +374,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
 
@@ -396,7 +413,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -406,7 +424,8 @@ class EmployeeControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
-        $this->assertEquals('John Doe', $data['name']);
+        $this->assertEquals('John', $data['name']);
+        $this->assertEquals('Doe', $data['lastName']);
         $this->assertEquals('john@correo.com', $data['email']);
         $this->assertEquals('product manager', $data['position']);
 
@@ -442,7 +461,8 @@ class EmployeeControllerTest extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
                 'HTTP_Authorization' => 'Bearer ' . $token,
             ], json_encode([
-                'name' => 'John Doe',
+                'name' => 'John',
+                'lastName' => 'Doe',
                 'email' => 'john@correo.com',
                 'position' => 'product manager',
                 'birthDate' => '1990-01-01',
@@ -464,7 +484,7 @@ class EmployeeControllerTest extends WebTestCase
         $this->assertIsArray($data);
         $this->assertNotEmpty($data);
 
-        $this->assertEquals('John Doe', $data[0]['name']);
+        $this->assertEquals('John', $data[0]['name']);
 
         foreach ($data as $employee) {
             $this->assertArrayHasKey('id', $employee);
