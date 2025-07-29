@@ -13,6 +13,7 @@ const Navbar = () => {
     <nav>
       <Link to="/dashboard">Dashboard</Link> |{' '}
       <Link to="/employees">Employees</Link> |{' '}
+      <Link to="/employees/create">New Employee</Link>
       <button onClick={handleLogout}>Logout</button>
     </nav>
   )
