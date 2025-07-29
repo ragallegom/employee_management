@@ -46,11 +46,10 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - FLASK_ENV=development
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=your-email@gmail.com
-      - SMTP_PASSWORD=your-app-password
+      - SMTP_HOST=sandbox.smtp.mailtrap.io
+      - SMTP_PORT=2525
+      - SMTP_USER=1f3cb5c721d204
+      - SMTP_PASSWORD=db8d0579248eb2
     networks:
       - employee-network
 
