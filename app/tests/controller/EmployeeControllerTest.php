@@ -428,6 +428,52 @@ class EmployeeControllerTest extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('You do not have permission to delete this employee', $data['error']);
     }
+
+    public function testShowEmployeeByName(): void
+    {
+        $email = 'user_'. uniqid() . '@test.com';
+        $password = 'test13';
+
+        $this->registerUser($email, $password);
+        $token = $this->loginAndGetToken($email, $password);
+
+        $this->client->request('POST', '/api/employees', [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $token,
+            ], json_encode([
+                'name' => 'John Doe',
+                'email' => 'john@correo.com',
+                'position' => 'product manager',
+                'birthDate' => '1990-01-01',
+            ]));
+
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->client->request('GET', "/api/employees/search", 
+            [
+                'name' => 'John'
+            ], [],
+            [
+                'HTTP_Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $this->assertResponseIsSuccessful();
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertIsArray($data);
+        $this->assertNotEmpty($data);
+
+        $this->assertEquals('John Doe', $data[0]['name']);
+
+        foreach ($data as $employee) {
+            $this->assertArrayHasKey('id', $employee);
+            $this->assertArrayHasKey('name', $employee);
+            $this->assertArrayHasKey('email', $employee);
+            $this->assertArrayHasKey('position', $employee);
+            $this->assertArrayHasKey('birthDate', $employee);
+        }
+    }
 }
 
 

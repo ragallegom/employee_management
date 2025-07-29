@@ -94,7 +94,7 @@ final class EmployeeController extends AbstractController
         return new JsonResponse(EmployeeOutput::fromEntity($employee), 201);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show_by_id', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(int $id, EmployeeRepository $employeeRepository): JsonResponse
     {
         $employee = $employeeRepository->find($id);
@@ -103,6 +103,29 @@ final class EmployeeController extends AbstractController
         }
 
         return new JsonResponse(EmployeeOutput::fromEntity($employee));
+    }
+
+    #[Route('/search', name: 'show_by_name', methods: ['GET'])]
+    public function searchByName(Request $request, EmployeeRepository $employeeRepository): JsonResponse
+    {
+        $name = $request->query->get('name');
+
+        if(!$name)
+            return new JsonResponse(['error' => 'Name is required'], 400);
+
+        
+        $employees = $employeeRepository->createQueryBuilder('e')
+            ->where('LOWER(e.name) LIKE :name')
+            ->setParameter('name', '%' . strtolower($name) . '%')
+            ->getQuery()
+            ->getResult();
+
+        if(empty($employees))
+            return new JsonResponse(['error' => 'No employees found']);
+
+        $data = array_map(fn($e) => EmployeeOutput::fromEntity($e), $employees);
+
+        return new JsonResponse($data);
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
