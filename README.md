@@ -15,7 +15,7 @@ Este proyecto es una API construida en Symfony que permite gestionar empleados. 
 ### Clonar el Repositorio
 
 ```bash
-git clone <REPO_URL>
+git clone git@github.com:ragallegom/employee_management.git
 cd employee-management-app
 ```
 
