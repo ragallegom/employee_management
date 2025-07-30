@@ -1,7 +1,11 @@
 // src/pages/EditEmployee.tsx
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Row from 'react-bootstrap/Row';
 
 type Employee = {
   id: number
@@ -38,9 +42,13 @@ const EditEmployee = () => {
         return
       }
 
-      toast.success("Employee updated successfully!")
       const data = await response.json()
-      setForm(data)
+      const birthDate = data.birthDate?.date?.slice(0, 10) ?? ''
+      
+      setForm({
+        ...data,
+        birthDate
+      })
     }
 
     fetchEmployee()
@@ -82,24 +90,39 @@ const EditEmployee = () => {
   return (
     <div>
       <h2>Edit Employee</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="name" value={form.name} onChange={handleChange} required />
-        <input name="lastName" value={form.lastName} onChange={handleChange} required />
-        <input name="email" value={form.email} onChange={handleChange} required />
-        <input name="position" value={form.position} onChange={handleChange} required />
-        <input
-            type="date"
-            name="birthDate"
-            value={
-                typeof form.birthDate === 'string'
-                ? form.birthDate.slice(0, 10)
-                : form.birthDate?.date?.slice(0, 10) || ''
-            }
-            onChange={handleChange}
-            required
-        />
-        <button type="submit">Update</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <Row className='mb-3'>
+          <Form.Group as={Col} md="4">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control name="name" placeholder="First Name" value={form.name} onChange={handleChange} required />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="4">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>          
+          <Form.Group as={Col} md="4">
+            <Form.Label>Email</Form.Label>
+            <InputGroup hasValidation>
+              <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+              <Form.Control name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>          
+          <Form.Group as={Col} md="4">
+            <Form.Label>Position</Form.Label>
+            <Form.Control name="position" placeholder="Position" value={form.position} onChange={handleChange} required />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>          
+          <Form.Group as={Col} md="4">
+            <Form.Label>Birht Date</Form.Label>
+            <Form.Control name="birthDate" type="date" value={form.birthDate} onChange={handleChange} required />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>          
+        </Row>
+        <Button type="submit">Update</Button>
+      </Form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}

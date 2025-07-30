@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { Button, Form } from 'react-bootstrap';
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -36,35 +37,34 @@ const Login = () => {
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className='mb-3' controlId='formBasicEmail'>
+          <Form.Label>Email:</Form.Label>
+          <Form.Control
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
+        </Form.Group>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
-      </form>
+        <Button type="submit">Login</Button>
+      </Form>
       <p className="text-sm mt-4 text-center">
         ¿Do you have account?{' '}
         <Link to="/register" className="text-blue-600 hover:underline">
           Register
         </Link>
       </p>
-
     </div>
   )
 }

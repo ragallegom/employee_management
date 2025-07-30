@@ -1,6 +1,7 @@
 // src/pages/Register.tsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button, Form } from 'react-bootstrap';
 
 const Register = () => {
   const [email, setEmail] = useState('')
@@ -36,29 +37,29 @@ const Register = () => {
   return (
     <div>
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Email:</Form.Label>
+          <Form.Control
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
+        </Form.Group>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {success && <p style={{ color: 'green' }}>{success}</p>}
-        <button type="submit">Register</button>
-      </form>
+        <Button type="submit">Register</Button>
+      </Form>
     </div>
   )
 }

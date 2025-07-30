@@ -2,6 +2,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Table from 'react-bootstrap/Table';
 
 type Employee = {
   id: number;
@@ -92,28 +97,46 @@ const Employees = () => {
     <div>
       <h2>Employees</h2>
 
-      <form onSubmit={handleSearchSubmit}>
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="submit">Find</button>
-      </form>
+      <Form onSubmit={handleSearchSubmit}>
+        <Row className='mb-3'>
+          <Form.Group as={Col} md="4">
+            <Form.Control className='mb-3'
+              type="text"
+              placeholder="Search by name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group as={Col} md="4">
+            <Button type="submit">Find</Button>
+          </Form.Group>
+        </Row>
+      </Form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {employees.length === 0 && <p>No employees found.</p>}
 
-      <ul>
-        {employees.map((emp) => (
-          <li key={emp.id}>
-            <strong>{emp.name} {emp.lastName}</strong> — {emp.position} — {emp.email}{' '}
-            <Link to={`/employees/edit/${emp.id}`}>Edit</Link>{' '}
-            <button onClick={() => handleDelete(emp.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map((emp) => (
+            <tr key={emp.id}>
+              <td><strong>{emp.name} {emp.lastName}</strong> </td>
+              <td>{emp.position}</td>
+              <td>{emp.email}</td>
+              <td><Link to={`/employees/edit/${emp.id}`}>Edit</Link>{' '}</td>
+              <td><Button onClick={() => handleDelete(emp.id)}>Delete</Button></td>
+            </tr>            
+          ))}
+        </tbody>
+      </Table>
 
       {totalPages > 1 && (
         <div>
