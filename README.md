@@ -36,10 +36,16 @@ JWT_SECRET_KEY=employee
 docker-compose up --build -d
 ```
 
+Esto Inicia:
+
+API Symfony en http://localhost:8000
+Microservicio de notificaciones en http://localhost:8001
+MySQL en localhost:3306
+
 ### Inicializar Base de Datos
 
 ```bash
-docker exec -it php bash
+docker-compose exec -it php bash
 php bin/console doctrine:migrations:migrate
 ```
 
@@ -58,6 +64,21 @@ make test
 ```
 
 ---
+
+## Frontend React
+
+### Struture
+
+La aplicación frontend está en la carpeta frontend/
+Utiliza React + Vite + Bootstrap
+
+```bash
+docker-compose exec -it frontend npm install
+npm run dev
+```
+
+Esto Inicia:
+El frontend de React: http://localhost:5174
 
 ## Endpoints
 
@@ -104,8 +125,3 @@ make test
 ```
 
 ---
-
-## Consejos Adicionales
-
-* Utiliza Mailtrap para desarrollo
-* Las pruebas se ejecutan en entorno `test` y limpian la BD
