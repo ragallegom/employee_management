@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 type Employee = {
   id: number
@@ -50,7 +51,7 @@ const Employees = () => {
     }
 
     const handleDelete = async (id: number) => {
-      if (!confirm("¿Estás seguro de que deseas eliminar este empleado?")) return;
+      if (!confirm("Are you sure you want to delete this employee?")) return;
 
       try {
         const token = localStorage.getItem("token");
@@ -63,10 +64,12 @@ const Employees = () => {
         });
 
         if (response.ok) {
+          toast.success("Employee successfully deleted");
           fetchEmployees(); 
         }
       } catch (error) {
         console.error(error);
+        toast.error("Unexpected error");
       }
     };
 

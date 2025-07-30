@@ -1,6 +1,7 @@
 // src/pages/CreateEmployee.tsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const CreateEmployee = () => {
   const navigate = useNavigate()
@@ -41,10 +42,12 @@ const CreateEmployee = () => {
       const data = await response.json()
 
       if (!response.ok) {
+        toast.error('Error creating employee')
         setError(data.error || data.errors?.join(', ') || 'Error creating employee')
         return
       }
 
+      toast.success('Employee created successfully!')
       setSuccess('Employee created successfully!')
       setForm({ name: '', lastName: '', email: '', position: '', birthDate: '' })
 

@@ -1,6 +1,7 @@
 // src/pages/EditEmployee.tsx
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 type Employee = {
   id: number
@@ -37,6 +38,7 @@ const EditEmployee = () => {
         return
       }
 
+      toast.success("Employee updated successfully!")
       const data = await response.json()
       setForm(data)
     }
