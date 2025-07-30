@@ -1,5 +1,6 @@
 // src/pages/Login.tsx
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
@@ -57,6 +58,13 @@ const Login = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <button type="submit">Login</button>
       </form>
+      <p className="text-sm mt-4 text-center">
+        ¿Do you have account?{' '}
+        <Link to="/register" className="text-blue-600 hover:underline">
+          Register
+        </Link>
+      </p>
+
     </div>
   )
 }
