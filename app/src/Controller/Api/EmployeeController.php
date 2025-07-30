@@ -14,22 +14,43 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Dto\EmployeeInput;
 use App\Dto\EmployeeOutput;
+use App\Service\ListService;
 use App\Service\NotificationService;
+use App\Service\SearchService;
 
 #[Route('/api/employees', name: 'api_employees_')]
 final class EmployeeController extends AbstractController
 {
-    #[Route('/', name: 'list', methods: ['GET'])]
-    public function list(EmployeeRepository $employeeRepository): JsonResponse
-    {
-        $employees = $employeeRepository->findAll();
-        
-        $output = array_map(
-            fn(Employee $employee) => EmployeeOutput::fromEntity($employee),
-            $employees
-        );
 
-        return new JsonResponse($output);
+    #[Route('/', name: 'search_list', methods: ['GET'])]
+    public function searchList(Request $request, SearchService $searchService): JsonResponse
+    {
+        $search = $request->query->get('search', '');
+        $page = (int) $request->query->get('page', 1);
+        $perPage = (int) $request->query->get('perPage', 10);
+
+        $results = $searchService->searchPaginated($search, $page, $perPage);
+
+        return new JsonResponse([
+            'employees' => array_map(
+                fn(Employee $employee) => EmployeeOutput::fromEntity($employee),
+                $results['employees']
+            ),
+            'total' => $results['total'],
+            'currentPage' => $page,
+            'perPage' => $perPage,
+        ]);
+    }
+
+    #[Route('/list', name: 'list', methods: ['GET'])]
+    public function list(Request $request, ListService $listService): JsonResponse
+    {
+        $page = (int) $request->query->get('page', 1);
+        $perPage = (int) $request->query->get('perPage', 10);
+
+        $result = $listService->getPaginatedList($page, $perPage);
+
+        return new JsonResponse($result);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -102,7 +123,7 @@ final class EmployeeController extends AbstractController
     }
 
     #[Route('/search', name: 'show_by_name', methods: ['GET'])]
-    public function searchByName(Request $request, EmployeeRepository $employeeRepository): JsonResponse
+    public function searchByName(Request $request, SearchService $searchService): JsonResponse
     {
         $name = $request->query->get('name');
 
@@ -110,18 +131,12 @@ final class EmployeeController extends AbstractController
             return new JsonResponse(['error' => 'Name is required'], 400);
 
         
-        $employees = $employeeRepository->createQueryBuilder('e')
-            ->where('LOWER(e.name) LIKE :name')
-            ->setParameter('name', '%' . strtolower($name) . '%')
-            ->getQuery()
-            ->getResult();
+        $results = $searchService->searchByName($name);
 
-        if(empty($employees))
-            return new JsonResponse(['error' => 'No employees found']);
+        if(empty($results))
+            return new JsonResponse(['error' => 'No results found']);
 
-        $data = array_map(fn($e) => EmployeeOutput::fromEntity($e), $employees);
-
-        return new JsonResponse($data);
+        return new JsonResponse($results);
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
