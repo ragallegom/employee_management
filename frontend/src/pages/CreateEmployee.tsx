@@ -93,9 +93,7 @@ const CreateEmployee = () => {
           <Form.Group as={Col} md="4">
             <Form.Label>Birht Date</Form.Label>
             <Form.Control name="birthDate" type="date" value={
-              typeof form.birthDate === 'string'
-              ? form.birthDate.slice(0, 10)
-              : form.birthDate?.date?.slice(0, 10) || ''
+              form.birthDate
             } onChange={handleChange} required />
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>          
